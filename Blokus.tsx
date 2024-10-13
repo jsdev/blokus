@@ -244,14 +244,15 @@ const ShapeCategory = ({ category, shapes, color }) => {
 };
 
 const BlokusShapesApp = () => {
-  const [players, setPlayers] = useState(
-    playerColors.map(generatePlayerShapes)
-  );
+  const [players, setPlayers] = useState(playerColors.map(generatePlayerShapes));
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
+  const [isFirstTurn, setIsFirstTurn] = useState(true);
+  const [selectedShape, setSelectedShape] = useState(null);
   const currentPlayer = players[currentPlayerIndex];
 
   const passTurn = () => {
     setCurrentPlayerIndex((prevIndex) => (prevIndex + 1) % players.length);
+    setIsFirstTurn(false);
   };
 
   const playPiece = (category, shapeIndex) => {
@@ -264,7 +265,11 @@ const BlokusShapesApp = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Blokus</h1>
-      <GameBoard />
+      <GameBoard
+        selectedShape={selectedShape}
+        playerColor={playerColors[currentPlayerIndex]}
+        isFirstTurn={isFirstTurn}
+      />
       <Tab.Group>
         <Tab.List className="flex space-x-4 mb-6">
           {Object.keys(currentPlayer).map((category) => (
@@ -287,6 +292,7 @@ const BlokusShapesApp = () => {
                 category={category}
                 shapes={categoryShapes}
                 color={playerColors[currentPlayerIndex]}
+                setSelectedShape={setSelectedShape}
               />
             </Tab.Panel>
           ))}
